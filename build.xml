@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project name="Jenkins MySQL test project" default="init">
+
+	<property name="mysql" value="/usr/bin/mysql"/>
+	<property name="systemctl" value="/usr/bin/systemctl"/>
+	<property name="sql.driver" value="com.mysql.jdbc.Driver"/>
+	<property name="sql.url" value="jdbc:mysql://127.0.0.1:3306/"/>
+	<property name="sql.user" value="root"/>
+	<property name="sql.pass" value=""/>
+	
+    <target name="init">
+		<echo message="Java ${java.version} ${java.vendor}"/>
+		<echo message="${os.name} ${os.arch} ${os.version}"/>
+		<echo message="Basedir ${basedir}"/>
+		<antcall target="insert_data"/>
+		<antcall target="show_data"/>
+    </target>
+	
+    <target name="insert_data">
+		<exec executable="${mysql}" input="mysql.sql" failonerror="true" os="Linux" >
+			<arg value="--user=root"/>
+		</exec>
+    </target>		
+	
+    <target name="show_data">
+			<echo message="Print table"/>
+		<sql 
+			print="yes"
+			autocommit="true"
+			driver="${sql.driver}"
+			url="${sql.url}"
+			userid="${sql.user}"
+			password="${sql.pass}">
+			use testdb;
+			select * from table2;
+		</sql>
+    </target>
+
+</project>
