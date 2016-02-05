@@ -1,29 +1,33 @@
 <?xml version="1.0"?>
 <project name="Jenkins MySQL test project" default="init">
 
+	<property name="sh" value="/usr/bin/sh"/>
 	<property name="mysql" value="/usr/bin/mysql"/>
 	<property name="systemctl" value="/usr/bin/systemctl"/>
 	<property name="mysqldriver" value="/usr/share/java/mysql-connector-java.jar"/>
 	<property name="sql.driver" value="com.mysql.jdbc.Driver"/>
 	<property name="sql.url" value="jdbc:mysql://127.0.0.1:3306/"/>
 	<property name="sql.user" value="root"/>
-	<property name="sql.pass" value=""/>
+	<property name="sql.pass" value="123456"/>
 
     <target name="init">
 		<echo message="Java ${java.version} ${java.vendor}"/>
 		<echo message="${os.name} ${os.arch} ${os.version}"/>
 		<echo message="Basedir ${basedir}"/>
+		<antcall target="show_db_after"/>
 		<antcall target="insert_data"/>
-		<antcall target="show_data"/>
+		<antcall target="show_db_before"/>
     </target>
 	
     <target name="insert_data">
-		<exec executable="${mysql}" input="mysql.sql" failonerror="true" os="Linux" >
-			<arg value="--user=root"/>
+		<exec executable="${sh}" failonerror="true" os="Linux">
+			<arg value="-c"/>
+			<arg value="for sqlfile in *.sql; do cat $sqlfile | ${mysql} --user=${sql.user} --password='${sql.pass}'; done" />  
+<!--			<arg value="cat *.sql | ${mysql} -u ${sql.user} -p ${sql.pass}"/> -->
 		</exec>
-    </target>		
+    </target>
 	
-    <target name="show_data">
+    <target name="show_db_before">
 			<echo message="Print table"/>
 		<sql 
 			print="yes"
@@ -37,7 +41,26 @@
 				use testdb;
 			</transaction>
 			<transaction>
-				select * from table2;
+				show tables;
+			</transaction>
+		</sql>
+    </target>
+	
+    <target name="show_db_after">
+			<echo message="Print table"/>
+		<sql 
+			print="yes"
+			classpath="${mysqldriver}"
+			autocommit="true"
+			driver="${sql.driver}"
+			url="${sql.url}"
+			userid="${sql.user}"
+			password="${sql.pass}">
+			<transaction>
+				use testdb;
+			</transaction>
+			<transaction>
+				show tables;
 			</transaction>
 		</sql>
     </target>
