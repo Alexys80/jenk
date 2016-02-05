@@ -3,11 +3,12 @@
 
 	<property name="mysql" value="/usr/bin/mysql"/>
 	<property name="systemctl" value="/usr/bin/systemctl"/>
+	<property name="mysqldriver" value="/usr/share/java/mysql-connector-java.jar"/>
 	<property name="sql.driver" value="com.mysql.jdbc.Driver"/>
 	<property name="sql.url" value="jdbc:mysql://127.0.0.1:3306/"/>
 	<property name="sql.user" value="root"/>
 	<property name="sql.pass" value=""/>
-	
+
     <target name="init">
 		<echo message="Java ${java.version} ${java.vendor}"/>
 		<echo message="${os.name} ${os.arch} ${os.version}"/>
@@ -26,13 +27,18 @@
 			<echo message="Print table"/>
 		<sql 
 			print="yes"
+			classpath="${mysqldriver}"
 			autocommit="true"
 			driver="${sql.driver}"
 			url="${sql.url}"
 			userid="${sql.user}"
 			password="${sql.pass}">
-			use testdb;
-			select * from table2;
+			<transaction>
+				use testdb;
+			</transaction>
+			<transaction>
+				select * from table2;
+			</transaction>
 		</sql>
     </target>
 
