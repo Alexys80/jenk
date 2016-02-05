@@ -9,3 +9,4 @@ INSERT INTO table3 (text) VALUES ("4th row");
 INSERT INTO table3 (text) VALUES ("5th row");
 INSERT INTO table3 (text) VALUES ("6th row");
 commit;
+edwecewqr
