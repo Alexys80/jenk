@@ -8,3 +8,4 @@ INSERT INTO table2 (text) VALUES ("3rd row");
 INSERT INTO table2 (text) VALUES ("4th row");
 INSERT INTO table2 (text) VALUES ("5th row");
 commit;
+ethdejtyedhe
