@@ -22,7 +22,7 @@
     <target name="insert_data">
 		<exec executable="${sh}" failonerror="true" os="Linux">
 			<arg value="-c"/>
-			<arg value="for sqlfile in *.sql; do cat $sqlfile | ${mysql} --user=${sql.user} --password='${sql.pass}'; done" />  
+			<arg value="set -e; for sqlfile in *.sql; do cat $sqlfile | ${mysql} --user=${sql.user} --password='${sql.pass}'; done" />  
 <!--			<arg value="cat *.sql | ${mysql} -u ${sql.user} -p ${sql.pass}"/> -->
 		</exec>
     </target>
